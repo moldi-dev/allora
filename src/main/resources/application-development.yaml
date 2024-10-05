@@ -21,7 +21,7 @@ spring:
     password: postgres_password
     url: jdbc:postgresql://localhost:5433/postgres_db
   application:
-    name: uni-crush
+    name: Allora
   mail:
     host: localhost
     port: 1025
