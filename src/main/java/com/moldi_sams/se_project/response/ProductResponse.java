@@ -1,11 +1,18 @@
 package com.moldi_sams.se_project.response;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public record ProductResponse(
-    Long productId,
-    String productName,
-    String productDescription,
-    BigDecimal productPrice
+        Long productId,
+        String name,
+        String description,
+        BigDecimal price,
+        Long stock,
+        List<ProductSizeResponse> sizes,
+        ProductBrandResponse brand,
+        ProductGenderResponse gender,
+        ProductCategoryResponse category,
+        List<ImageResponse> images
 ) {
 }

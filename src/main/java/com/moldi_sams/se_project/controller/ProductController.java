@@ -1,16 +1,18 @@
 package com.moldi_sams.se_project.controller;
 
-import com.moldi_sams.se_project.request.ProductRequest;
-import com.moldi_sams.se_project.response.ProductResponse;
+import com.moldi_sams.se_project.request.admin.ProductRequest;
+import com.moldi_sams.se_project.response.HttpResponse;
 import com.moldi_sams.se_project.service.implementation.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,31 +21,81 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<Page<ProductResponse>> findAll(Pageable pageable) {
-        return ResponseEntity.ok(productService.findAll(pageable));
+    public ResponseEntity<HttpResponse> findAll(Pageable pageable) {
+        var result = productService.findAll(pageable);
+
+        return ResponseEntity.ok(
+                HttpResponse
+                        .builder()
+                        .timestamp(LocalDateTime.now().toString())
+                        .responseMessage("The products have been found successfully")
+                        .responseStatus(HttpStatus.OK)
+                        .responseStatusCode(HttpStatus.OK.value())
+                        .body(result)
+                        .build()
+        );
     }
 
     @GetMapping("/product-id={productId}")
-    public ResponseEntity<ProductResponse> findById(@PathVariable("productId") Long productId) {
-        return ResponseEntity.ok(productService.findById(productId));
+    public ResponseEntity<HttpResponse> findById(@PathVariable("productId") Long productId) {
+        var result = productService.findById(productId);
+
+        return ResponseEntity.ok(
+                HttpResponse
+                        .builder()
+                        .timestamp(LocalDateTime.now().toString())
+                        .responseMessage("The product has been found successfully")
+                        .responseStatus(HttpStatus.OK)
+                        .responseStatusCode(HttpStatus.OK.value())
+                        .body(result)
+                        .build()
+        );
     }
 
-    @PostMapping
-    public ResponseEntity<ProductResponse> save(@RequestBody @Valid ProductRequest productRequest) {
-        return ResponseEntity.created(
-                URI.create("")
-        ).body(productService.save(productRequest));
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<HttpResponse> save(@ModelAttribute @Valid ProductRequest productRequest) {
+        var result = productService.save(productRequest);
+
+        return ResponseEntity.created(URI.create("")).body(
+                HttpResponse
+                        .builder()
+                        .timestamp(LocalDateTime.now().toString())
+                        .responseMessage("The product has been saved successfully")
+                        .responseStatus(HttpStatus.OK)
+                        .responseStatusCode(HttpStatus.OK.value())
+                        .body(result)
+                        .build()
+        );
     }
 
-    @PatchMapping("/product-id={productId}")
-    public ResponseEntity<ProductResponse> updateById(@PathVariable("productId") Long productId, @RequestBody @Valid ProductRequest productRequest) {
-        return ResponseEntity.ok(productService.updateById(productId, productRequest));
+    @PatchMapping(path = "/product-id={productId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<HttpResponse> updateById(@PathVariable("productId") Long productId, @ModelAttribute @Valid ProductRequest productRequest) {
+        var result = productService.updateById(productId, productRequest);
+
+        return ResponseEntity.ok(
+                HttpResponse
+                        .builder()
+                        .timestamp(LocalDateTime.now().toString())
+                        .responseMessage("The product has been updated successfully")
+                        .responseStatus(HttpStatus.OK)
+                        .responseStatusCode(HttpStatus.OK.value())
+                        .body(result)
+                        .build()
+        );
     }
 
     @DeleteMapping("/product-id={productId}")
-    public ResponseEntity<Void> deleteById(@PathVariable("productId") Long productId) {
+    public ResponseEntity<HttpResponse> deleteById(@PathVariable("productId") Long productId) {
         productService.deleteById(productId);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(
+                HttpResponse
+                        .builder()
+                        .timestamp(LocalDateTime.now().toString())
+                        .responseMessage("The product has been deleted successfully")
+                        .responseStatus(HttpStatus.OK)
+                        .responseStatusCode(HttpStatus.OK.value())
+                        .build()
+        );
     }
 }
