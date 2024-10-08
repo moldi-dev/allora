@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -48,24 +49,26 @@ public class ImageService implements IImageService {
     @Override
     public ImageResponse save(MultipartFile file) {
         String fileName = file.getOriginalFilename();
+        String objectFileName = file.getOriginalFilename() + "_" + LocalDateTime.now();
 
         Image newImage = Image.builder()
                 .size(BigDecimal.valueOf(file.getSize()).divide(BigDecimal.valueOf(1024 * 1024), 2, RoundingMode.HALF_UP))
                 .type(file.getContentType())
                 .name(fileName)
+                .objectName(objectFileName)
                 .build();
 
         try {
             minioClient.putObject(
                     PutObjectArgs.builder()
                             .bucket(bucketName)
-                            .object(fileName)
+                            .object(objectFileName)
                             .stream(file.getInputStream(), file.getSize(), -1)
                             .contentType(file.getContentType())
                             .build()
             );
 
-            String fileUrl = String.format("%s/%s/%s", minioUrl, bucketName, fileName);
+            String fileUrl = String.format("%s/%s/%s", minioUrl, bucketName, objectFileName);
             newImage.setUrl(fileUrl);
 
             return imageMapper.toImageResponse(imageRepository.save(newImage));
@@ -82,7 +85,7 @@ public class ImageService implements IImageService {
             minioClient.removeObject(
                     RemoveObjectArgs.builder()
                             .bucket(bucketName)
-                            .object(image.getName())
+                            .object(image.getObjectName())
                             .build()
             );
         }

@@ -4,6 +4,9 @@ import com.moldi_sams.se_project.entity.User;
 import com.moldi_sams.se_project.exception.ResourceNotFoundException;
 import com.moldi_sams.se_project.mapper.UserMapper;
 import com.moldi_sams.se_project.repository.UserRepository;
+import com.moldi_sams.se_project.request.user.PasswordChangeRequest;
+import com.moldi_sams.se_project.request.user.PasswordResetRequest;
+import com.moldi_sams.se_project.request.user.PasswordResetTokenRequest;
 import com.moldi_sams.se_project.response.UserResponse;
 import com.moldi_sams.se_project.service.IUserService;
 import jakarta.transaction.Transactional;
@@ -11,7 +14,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -19,6 +28,8 @@ import org.springframework.stereotype.Service;
 public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Page<UserResponse> findAll(Pageable pageable) {
@@ -65,5 +76,66 @@ public class UserService implements IUserService {
     public UserResponse findAuthenticatedUserData(Authentication authentication) {
         User authenticatedUser = ((User) authentication.getPrincipal());
         return userMapper.toUserResponse(authenticatedUser);
+    }
+
+    @Override
+    public void requestPasswordResetToken(PasswordResetTokenRequest request) {
+        User searchedUserByEmail = userRepository
+                .findByEmailIgnoreCase(request.email())
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid email provided"));
+
+        String token = generateToken(searchedUserByEmail, 20);
+
+        searchedUserByEmail.setResetPasswordToken(token);
+
+        userRepository.save(searchedUserByEmail);
+
+        emailService.sendResetPasswordTokenEmail(searchedUserByEmail.getEmail(), token);
+    }
+
+    @Override
+    public void resetPassword(PasswordResetRequest request) {
+        User searchedUser = userRepository.findByEmailIgnoreCase(request.email())
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid provided email"));
+
+        if (!searchedUser.getResetPasswordToken().equals(request.resetPasswordCode())) {
+            throw new ResourceNotFoundException("Invalid provided password reset code");
+        }
+
+        searchedUser.setPassword(passwordEncoder.encode(request.newPassword()));
+
+        userRepository.save(searchedUser);
+    }
+
+    @Override
+    public void changePassword(Authentication authentication, PasswordChangeRequest request) {
+        User authenticatedUser = ((User) authentication.getPrincipal());
+
+        if (!passwordEncoder.matches(request.currentPassword(), authenticatedUser.getPassword())) {
+            throw new ResourceNotFoundException("The provided current password is invalid");
+        }
+
+        authenticatedUser.setPassword(passwordEncoder.encode(request.newPassword()));
+
+        userRepository.save(authenticatedUser);
+    }
+
+    private String generateToken(User user, int length) {
+        UUID uuid = UUID.randomUUID();
+        String username = user.getUsername();
+        String resetPasswordCode = uuid + username;
+
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = digest.digest(resetPasswordCode.getBytes());
+
+            String base64Encoded = Base64.getUrlEncoder().withoutPadding().encodeToString(hashBytes);
+
+            return base64Encoded.substring(0, length - 1);
+        }
+
+        catch (NoSuchAlgorithmException e) {
+            return null;
+        }
     }
 }

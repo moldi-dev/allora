@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f6f6f6;
+            color: #333333;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .header h1 {
+            margin: 0;
+            color: black;
+        }
+        .order-details {
+            margin: 20px 0;
+        }
+        .order-details h2 {
+            color: black;
+        }
+        .order-details p {
+            margin: 5px 0;
+        }
+        .order-item {
+            border-bottom: 1px solid #eeeeee;
+            padding: 10px 0;
+        }
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            font-size: 12px;
+            color: #aaaaaa;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Invoice for your order, [[${lastName}]] [[${firstName}]]</h1>
+    </div>
+    <div class="order-details">
+        <h2>Order Details</h2>
+        <p><strong>Order Date:</strong> [[${orderDate}]]</p>
+        <p><strong>Total Price:</strong> $[[${totalPrice}]]</p>
+        <h3>Products:</h3>
+        <div th:each="product : ${orderLineProducts}" class="order-item">
+            <p><strong>Product Name:</strong> [[${product.product.name}]]</p>
+            <p><strong>Description:</strong> [[${product.product.description}]]</p>
+            <p><strong>Category:</strong> [[${product.product.category.name}]]</p>
+            <p><strong>Brand:</strong> [[${product.product.brand.name}]]</p>
+            <p><strong>Gender:</strong> [[${product.product.gender.name}]]</p>
+            <p><strong>Selected Size:</strong> [[${product.productSize.name}]]</p>
+            <p><strong>Quantity:</strong> [[${product.quantity}]]</p>
+            <p><strong>Price per item:</strong> $[[${product.product.price}]]</p>
+            <p><strong>Total for this product:</strong> $[[${product.product.price} * ${product.quantity}]]</p>
+        </div>
+        <h3>Billing Address:</h3>
+        <p><strong>Name:</strong> [[${userPersonalInformation.firstName}]] [[${userPersonalInformation.lastName}]]</p>
+        <p><strong>Address:</strong> [[${userPersonalInformation.address}]]</p>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 Allora. All rights reserved.</p>
+    </div>
+</div>
+</body>
+</html>

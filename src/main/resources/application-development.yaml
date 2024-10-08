@@ -1,6 +1,11 @@
 server:
   port: 8080
 
+#logging:
+#  level:
+#    org:
+#      springframework: DEBUG
+
 spring:
   servlet:
     multipart:
@@ -10,7 +15,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    #show-sql: true
+    show-sql: false
     open-in-view: false
     properties:
       hibernate:
@@ -27,7 +33,7 @@ spring:
     port: 1025
     username: mail_username
     password: mail_password
-    from: contact
+    from: noreply@allora.com
     properties:
       mail:
         smtp:
@@ -53,3 +59,9 @@ jwt:
   duration: 604800000 #7 days
   secret:
     key: 8a6808baa0145ff9d994242f0d11b78b58c54e0c38b883e52284e84da440549c
+
+stripe:
+  webhook:
+    secret: ${DEVELOPMENT_STRIPE_WEBHOOK_SECRET}
+  api:
+    key: ${DEVELOPMENT_STRIPE_API_KEY}

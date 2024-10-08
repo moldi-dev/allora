@@ -102,6 +102,20 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, response.getErrorStatus());
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException exception, WebRequest request) {
+        ErrorResponse response = ErrorResponse
+                .builder()
+                .timestamp(LocalDateTime.now().toString())
+                .errorMessage(exception.getMessage())
+                .errorStatus(HttpStatus.BAD_REQUEST)
+                .errorCode(HttpStatus.BAD_REQUEST.value())
+                .requestPath(request.getDescription(false))
+                .build();
+
+        return new ResponseEntity<>(response, response.getErrorStatus());
+    }
+
     @ExceptionHandler({AccountNotFoundException.class, MailAuthenticationException.class, BadCredentialsException.class, MalformedJwtException.class, SignatureException.class, ExpiredJwtException.class, InsufficientAuthenticationException.class, AccessDeniedException.class, DisabledException.class, LockedException.class})
     public ResponseEntity<ErrorResponse> handleSecurityExceptions(Exception exception, WebRequest request, HttpServletResponse servletResponse) {
         ErrorResponse response = ErrorResponse.builder().build();
@@ -164,6 +178,20 @@ public class GlobalExceptionHandler {
         response.setErrorCode(status.value());
         response.setErrorStatus(status);
         response.setRequestPath(request.getDescription(false));
+
+        return new ResponseEntity<>(response, response.getErrorStatus());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException exception, WebRequest request) {
+        ErrorResponse response = ErrorResponse
+                .builder()
+                .timestamp(LocalDateTime.now().toString())
+                .errorMessage(exception.getMessage())
+                .errorStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                .errorCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .requestPath(request.getDescription(false))
+                .build();
 
         return new ResponseEntity<>(response, response.getErrorStatus());
     }

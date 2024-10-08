@@ -45,6 +45,9 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/api/v1/authentication/sign-out").authenticated()
 
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/authenticated").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/users/request-password-reset-code").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/users/reset-password").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/users/change-password").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/api/v1/users-personal-informations/authenticated").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/users-personal-informations/authenticated").authenticated()
@@ -67,6 +70,12 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/api/v1/product-sizes").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/product-sizes/id=**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/product-sizes/name=**").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/api/v1/orders/authenticated").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/orders").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/orders/pending/id=**").authenticated()
+
+                        .requestMatchers(HttpMethod.POST, "/api/v1/payments/stripe-webhook").permitAll()
 
                         .anyRequest().hasAnyAuthority(Role.ROLE_ADMINISTRATOR.name())
                 )

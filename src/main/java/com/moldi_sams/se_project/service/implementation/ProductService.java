@@ -33,6 +33,7 @@ public class ProductService implements IProductService {
     private final ProductBrandRepository productBrandRepository;
     private final ProductCategoryRepository productCategoryRepository;
     private final ProductGenderRepository productGenderRepository;
+    private final OrderRepository orderRepository;
 
     @Override
     public Page<ProductResponse> findAll(Pageable pageable) {
@@ -205,11 +206,13 @@ public class ProductService implements IProductService {
     public void deleteById(Long productId) {
         Optional<Product> searchedProductById = productRepository.findById(productId);
 
-        // TODO: when the orders are implemented remove all associated orders with the given product
-
         if (searchedProductById.isEmpty()) {
             throw new ResourceNotFoundException("The product by the given id could not be found");
         }
+
+        List<Order> orders = orderRepository.findAllContainingProductId(productId);
+
+        orderRepository.deleteAll(orders);
 
         searchedProductById.get().getImages().forEach(imageService::delete);
 

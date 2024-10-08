@@ -1,5 +1,8 @@
 package com.moldi_sams.se_project.service;
 
+import com.moldi_sams.se_project.request.user.PasswordChangeRequest;
+import com.moldi_sams.se_project.request.user.PasswordResetRequest;
+import com.moldi_sams.se_project.request.user.PasswordResetTokenRequest;
 import com.moldi_sams.se_project.response.UserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,4 +16,7 @@ public interface IUserService {
     Page<UserResponse> findAllByUsernameLikeIgnoreCase(String username, Pageable pageable);
     Page<UserResponse> findAllByEmailLikeIgnoreCase(String email, Pageable pageable);
     UserResponse findAuthenticatedUserData(Authentication authentication);
+    void requestPasswordResetToken(PasswordResetTokenRequest request);
+    void resetPassword(PasswordResetRequest request);
+    void changePassword(Authentication authentication, PasswordChangeRequest request);
 }

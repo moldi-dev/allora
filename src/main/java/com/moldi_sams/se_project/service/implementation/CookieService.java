@@ -1,6 +1,5 @@
 package com.moldi_sams.se_project.service.implementation;
 
-import org.springframework.boot.web.server.Cookie;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;

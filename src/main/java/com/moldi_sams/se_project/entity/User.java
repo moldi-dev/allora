@@ -35,6 +35,7 @@ public class User implements UserDetails {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UserPersonalInformation personalInformation;
 
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     private Boolean isLocked;

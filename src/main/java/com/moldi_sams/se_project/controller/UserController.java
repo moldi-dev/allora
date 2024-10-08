@@ -1,16 +1,17 @@
 package com.moldi_sams.se_project.controller;
 
+import com.moldi_sams.se_project.request.user.PasswordChangeRequest;
+import com.moldi_sams.se_project.request.user.PasswordResetRequest;
+import com.moldi_sams.se_project.request.user.PasswordResetTokenRequest;
 import com.moldi_sams.se_project.response.HttpResponse;
 import com.moldi_sams.se_project.service.implementation.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -96,6 +97,51 @@ public class UserController {
                         .responseStatus(HttpStatus.OK)
                         .responseStatusCode(HttpStatus.OK.value())
                         .body(result)
+                        .build()
+        );
+    }
+
+    @PatchMapping("/request-password-reset-code")
+    public ResponseEntity<HttpResponse> requestPasswordResetCode(@RequestBody @Valid PasswordResetTokenRequest request) {
+        userService.requestPasswordResetToken(request);
+
+        return ResponseEntity.ok(
+                HttpResponse
+                        .builder()
+                        .timestamp(LocalDateTime.now().toString())
+                        .responseMessage("The password reset code has been sent on the provided email successfully")
+                        .responseStatus(HttpStatus.OK)
+                        .responseStatusCode(HttpStatus.OK.value())
+                        .build()
+        );
+    }
+
+    @PatchMapping("/reset-password")
+    public ResponseEntity<HttpResponse> resetPassword(@RequestBody @Valid PasswordResetRequest request) {
+        userService.resetPassword(request);
+
+        return ResponseEntity.ok(
+                HttpResponse
+                        .builder()
+                        .timestamp(LocalDateTime.now().toString())
+                        .responseMessage("The password has been resetted successfully")
+                        .responseStatus(HttpStatus.OK)
+                        .responseStatusCode(HttpStatus.OK.value())
+                        .build()
+        );
+    }
+
+    @PatchMapping("/change-password")
+    public ResponseEntity<HttpResponse> changePassword(Authentication authentication, @RequestBody @Valid PasswordChangeRequest request) {
+        userService.changePassword(authentication, request);
+
+        return ResponseEntity.ok(
+                HttpResponse
+                        .builder()
+                        .timestamp(LocalDateTime.now().toString())
+                        .responseMessage("The password has been changed successfully")
+                        .responseStatus(HttpStatus.OK)
+                        .responseStatusCode(HttpStatus.OK.value())
                         .build()
         );
     }

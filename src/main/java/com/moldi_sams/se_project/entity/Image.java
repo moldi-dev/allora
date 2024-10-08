@@ -20,6 +20,9 @@ public class Image {
     @Column(columnDefinition = "TEXT")
     private String name;
 
+    @Column(columnDefinition = "TEXT")
+    private String objectName;
+
     private BigDecimal size;
 
     private String type;
