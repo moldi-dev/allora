@@ -35,7 +35,7 @@ public class ProductBrandController {
         );
     }
 
-    @GetMapping("/product-brand-id={productBrandId}")
+    @GetMapping("/id={productBrandId}")
     public ResponseEntity<HttpResponse> findById(@PathVariable("productBrandId") Long productBrandId) {
         var result = productBrandService.findById(productBrandId);
 

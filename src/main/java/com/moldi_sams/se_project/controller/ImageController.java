@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class ImageController {
     private final ImageService imageService;
 
-    @GetMapping("/image-id={imageId}")
+    @GetMapping("/id={imageId}")
     public ResponseEntity<HttpResponse> findById(@PathVariable("imageId") Long imageId) {
         var result = imageService.findById(imageId);
 

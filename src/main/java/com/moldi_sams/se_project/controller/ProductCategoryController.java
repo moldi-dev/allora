@@ -35,7 +35,7 @@ public class ProductCategoryController {
         );
     }
 
-    @GetMapping("/product-category-id={productCategoryId}")
+    @GetMapping("/id={productCategoryId}")
     public ResponseEntity<HttpResponse> findById(@PathVariable("productCategoryId") Long productCategoryId) {
         var result = productCategoryService.findById(productCategoryId);
 

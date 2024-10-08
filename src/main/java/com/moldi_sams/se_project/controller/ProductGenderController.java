@@ -34,7 +34,7 @@ public class ProductGenderController {
         );
     }
 
-    @GetMapping("/product-gender-id={productGenderId}")
+    @GetMapping("/id={productGenderId}")
     public ResponseEntity<HttpResponse> findById(@PathVariable("productGenderId") Long productGenderId) {
         var result = productGenderService.findById(productGenderId);
 

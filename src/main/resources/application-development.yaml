@@ -48,3 +48,8 @@ minio:
 
 frontend:
   url: http://localhost:3000
+
+jwt:
+  duration: 604800000 #7 days
+  secret:
+    key: 8a6808baa0145ff9d994242f0d11b78b58c54e0c38b883e52284e84da440549c

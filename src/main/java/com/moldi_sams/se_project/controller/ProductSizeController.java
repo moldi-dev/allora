@@ -34,7 +34,7 @@ public class ProductSizeController {
         );
     }
 
-    @GetMapping("/product-size-id={productSizeId}")
+    @GetMapping("/id={productSizeId}")
     public ResponseEntity<HttpResponse> findById(@PathVariable("productSizeId") Long productSizeId) {
         var result = productSizeService.findById(productSizeId);
 

@@ -1,34 +1,34 @@
 package com.moldi_sams.se_project.controller;
 
-import com.moldi_sams.se_project.request.admin.ProductRequest;
 import com.moldi_sams.se_project.response.HttpResponse;
-import com.moldi_sams.se_project.service.implementation.ProductService;
-import jakarta.validation.Valid;
+import com.moldi_sams.se_project.service.implementation.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
 import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/products")
-public class ProductController {
-    private final ProductService productService;
+@RequestMapping("/api/v1/users")
+public class UserController {
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<HttpResponse> findAll(Pageable pageable) {
-        var result = productService.findAll(pageable);
+        var result = userService.findAll(pageable);
 
         return ResponseEntity.ok(
                 HttpResponse
                         .builder()
                         .timestamp(LocalDateTime.now().toString())
-                        .responseMessage("The products have been found successfully")
+                        .responseMessage("The users have been found successfully")
                         .responseStatus(HttpStatus.OK)
                         .responseStatusCode(HttpStatus.OK.value())
                         .body(result)
@@ -36,15 +36,15 @@ public class ProductController {
         );
     }
 
-    @GetMapping("/id={productId}")
-    public ResponseEntity<HttpResponse> findById(@PathVariable("productId") Long productId) {
-        var result = productService.findById(productId);
+    @GetMapping("/id={userId}")
+    public ResponseEntity<HttpResponse> findById(@PathVariable("userId") Long userId) {
+        var result = userService.findById(userId);
 
         return ResponseEntity.ok(
                 HttpResponse
                         .builder()
                         .timestamp(LocalDateTime.now().toString())
-                        .responseMessage("The product has been found successfully")
+                        .responseMessage("The user has been found successfully")
                         .responseStatus(HttpStatus.OK)
                         .responseStatusCode(HttpStatus.OK.value())
                         .body(result)
@@ -52,15 +52,15 @@ public class ProductController {
         );
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<HttpResponse> save(@ModelAttribute @Valid ProductRequest productRequest) {
-        var result = productService.save(productRequest);
+    @GetMapping("/all/username-like={username}")
+    public ResponseEntity<HttpResponse> findAllByUsernameLikeIgnoreCase(@PathVariable("username") String username, Pageable pageable) {
+        var result = userService.findAllByUsernameLikeIgnoreCase(username, pageable);
 
-        return ResponseEntity.created(URI.create("")).body(
+        return ResponseEntity.ok(
                 HttpResponse
                         .builder()
                         .timestamp(LocalDateTime.now().toString())
-                        .responseMessage("The product has been saved successfully")
+                        .responseMessage("The users have been found successfully")
                         .responseStatus(HttpStatus.OK)
                         .responseStatusCode(HttpStatus.OK.value())
                         .body(result)
@@ -68,15 +68,15 @@ public class ProductController {
         );
     }
 
-    @PatchMapping(path = "/id={productId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<HttpResponse> updateById(@PathVariable("productId") Long productId, @ModelAttribute @Valid ProductRequest productRequest) {
-        var result = productService.updateById(productId, productRequest);
+    @GetMapping("/all/email-like={email}")
+    public ResponseEntity<HttpResponse> findAllByEmailLikeIgnoreCase(@PathVariable("email") String email, Pageable pageable) {
+        var result = userService.findAllByEmailLikeIgnoreCase(email, pageable);
 
         return ResponseEntity.ok(
                 HttpResponse
                         .builder()
                         .timestamp(LocalDateTime.now().toString())
-                        .responseMessage("The product has been updated successfully")
+                        .responseMessage("The users have been found successfully")
                         .responseStatus(HttpStatus.OK)
                         .responseStatusCode(HttpStatus.OK.value())
                         .body(result)
@@ -84,17 +84,18 @@ public class ProductController {
         );
     }
 
-    @DeleteMapping("/id={productId}")
-    public ResponseEntity<HttpResponse> deleteById(@PathVariable("productId") Long productId) {
-        productService.deleteById(productId);
+    @GetMapping("/authenticated")
+    public ResponseEntity<HttpResponse> findAuthenticatedUserData(Authentication authentication) {
+        var result = userService.findAuthenticatedUserData(authentication);
 
         return ResponseEntity.ok(
                 HttpResponse
                         .builder()
                         .timestamp(LocalDateTime.now().toString())
-                        .responseMessage("The product has been deleted successfully")
+                        .responseMessage("The user has been found successfully")
                         .responseStatus(HttpStatus.OK)
                         .responseStatusCode(HttpStatus.OK.value())
+                        .body(result)
                         .build()
         );
     }
