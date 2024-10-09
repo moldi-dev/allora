@@ -1,9 +1,8 @@
 package com.moldi_sams.se_project.controller;
 
-import com.moldi_sams.se_project.request.admin.OrderUpdateRequest;
-import com.moldi_sams.se_project.request.user.OrderRequest;
+import com.moldi_sams.se_project.request.user.ReviewRequest;
 import com.moldi_sams.se_project.response.HttpResponse;
-import com.moldi_sams.se_project.service.implementation.OrderService;
+import com.moldi_sams.se_project.service.implementation.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -12,23 +11,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/orders")
-public class OrderController {
-    private final OrderService orderService;
+@RequestMapping("/api/v1/reviews")
+public class ReviewController {
+    private final ReviewService reviewService;
 
     @GetMapping
     public ResponseEntity<HttpResponse> findAll(Pageable pageable) {
-        var result = orderService.findAll(pageable);
+        var result = reviewService.findAll(pageable);
 
         return ResponseEntity.ok(
                 HttpResponse
                         .builder()
                         .timestamp(LocalDateTime.now().toString())
-                        .responseMessage("The orders have been found successfully")
+                        .responseMessage("The reviews have been found successfully")
                         .responseStatus(HttpStatus.OK)
                         .responseStatusCode(HttpStatus.OK.value())
                         .body(result)
@@ -36,15 +36,15 @@ public class OrderController {
         );
     }
 
-    @GetMapping("/id={orderId}")
-    public ResponseEntity<HttpResponse> findById(@PathVariable("orderId") Long orderId) {
-        var result = orderService.findById(orderId);
+    @GetMapping("/id={reviewId}")
+    public ResponseEntity<HttpResponse> findById(@PathVariable("reviewId") Long reviewId) {
+        var result = reviewService.findById(reviewId);
 
         return ResponseEntity.ok(
                 HttpResponse
                         .builder()
                         .timestamp(LocalDateTime.now().toString())
-                        .responseMessage("The order has been found successfully")
+                        .responseMessage("The review has been found successfully")
                         .responseStatus(HttpStatus.OK)
                         .responseStatusCode(HttpStatus.OK.value())
                         .body(result)
@@ -52,15 +52,15 @@ public class OrderController {
         );
     }
 
-    @GetMapping("/authenticated")
-    public ResponseEntity<HttpResponse> findAuthenticatedUserData(Authentication authentication, Pageable pageable) {
-        var result = orderService.findAuthenticatedUserData(authentication, pageable);
+    @GetMapping("/product-id={productId}")
+    public ResponseEntity<HttpResponse> findAllByProductId(@PathVariable("productId") Long productId, Pageable pageable) {
+        var result = reviewService.findAllByProductId(productId, pageable);
 
         return ResponseEntity.ok(
                 HttpResponse
                         .builder()
                         .timestamp(LocalDateTime.now().toString())
-                        .responseMessage("The orders have been found successfully")
+                        .responseMessage("The reviews have been found successfully")
                         .responseStatus(HttpStatus.OK)
                         .responseStatusCode(HttpStatus.OK.value())
                         .body(result)
@@ -69,29 +69,14 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpResponse> placeOrder(Authentication authentication, @RequestBody @Valid OrderRequest orderRequest) {
-        var result = orderService.placeOrder(authentication, orderRequest);
+    public ResponseEntity<HttpResponse> save(Authentication authentication, @RequestBody @Valid ReviewRequest request) {
+        var result = reviewService.save(authentication, request);
 
-        return ResponseEntity.ok(
+        return ResponseEntity.created(URI.create("")).body(
                 HttpResponse
                         .builder()
                         .timestamp(LocalDateTime.now().toString())
-                        .responseMessage(result)
-                        .responseStatus(HttpStatus.OK)
-                        .responseStatusCode(HttpStatus.OK.value())
-                        .build()
-        );
-    }
-
-    @PatchMapping("/id={orderId}")
-    public ResponseEntity<HttpResponse> updateById(@PathVariable("orderId") Long orderId, @RequestBody @Valid OrderUpdateRequest request) {
-        var result = orderService.updateById(orderId, request);
-
-        return ResponseEntity.ok(
-                HttpResponse
-                        .builder()
-                        .timestamp(LocalDateTime.now().toString())
-                        .responseMessage("The order has been updated successfully")
+                        .responseMessage("The review has been saved successfully")
                         .responseStatus(HttpStatus.OK)
                         .responseStatusCode(HttpStatus.OK.value())
                         .body(result)
@@ -99,30 +84,31 @@ public class OrderController {
         );
     }
 
-    @PatchMapping("/pending/id={orderId}")
-    public ResponseEntity<HttpResponse> payPendingOrder(@PathVariable("orderId") Long orderId, Authentication authentication) {
-        var result = orderService.payPendingOrder(authentication, orderId);
+    @PatchMapping("/id={reviewId}")
+    public ResponseEntity<HttpResponse> updateById(@PathVariable("reviewId") Long reviewId, @RequestBody @Valid ReviewRequest request) {
+        var result = reviewService.updateById(reviewId, request);
 
         return ResponseEntity.ok(
                 HttpResponse
                         .builder()
                         .timestamp(LocalDateTime.now().toString())
-                        .responseMessage(result)
+                        .responseMessage("The review has been updated successfully")
                         .responseStatus(HttpStatus.OK)
                         .responseStatusCode(HttpStatus.OK.value())
+                        .body(result)
                         .build()
         );
     }
 
-    @DeleteMapping("/id={orderId}")
-    public ResponseEntity<HttpResponse> deleteById(@PathVariable("orderId") Long orderId) {
-        orderService.deleteById(orderId);
+    @DeleteMapping("/id={reviewId}")
+    public ResponseEntity<HttpResponse> deleteById(@PathVariable("reviewId") Long reviewId) {
+        reviewService.deleteById(reviewId);
 
         return ResponseEntity.ok(
                 HttpResponse
                         .builder()
                         .timestamp(LocalDateTime.now().toString())
-                        .responseMessage("The order has been deleted successfully")
+                        .responseMessage("The review has been deleted successfully")
                         .responseStatus(HttpStatus.OK)
                         .responseStatusCode(HttpStatus.OK.value())
                         .build()

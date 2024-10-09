@@ -1,5 +1,6 @@
 package com.moldi_sams.se_project.service;
 
+import com.moldi_sams.se_project.request.admin.OrderUpdateRequest;
 import com.moldi_sams.se_project.request.user.OrderRequest;
 import com.moldi_sams.se_project.response.OrderResponse;
 import org.springframework.data.domain.Page;
@@ -16,4 +17,5 @@ public interface IOrderService {
     String placeOrder(Authentication authentication, OrderRequest orderRequest);
     String payPendingOrder(Authentication authentication, Long orderId);
     void deleteById(Long orderId);
+    OrderResponse updateById(Long orderId, OrderUpdateRequest request);
 }

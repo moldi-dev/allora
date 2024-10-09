@@ -81,8 +81,10 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public void signOut(HttpServletResponse response) {
         HttpCookie cookie = cookieService.deleteAccessTokenCookie();
+        HttpCookie cookie2 = cookieService.removeXsrfCookie();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE2, cookie2.toString());
     }
 
     private User authenticate(String username, String password) {

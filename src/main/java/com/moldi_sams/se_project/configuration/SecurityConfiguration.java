@@ -10,11 +10,11 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -36,9 +36,13 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable) // TODO: implement CSRF token after developing the entire API
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET, "/hello-world").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/api/v1/csrf").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/api/v1/authentication/sign-up").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/authentication/sign-in").permitAll()
@@ -76,6 +80,9 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/orders/pending/id=**").authenticated()
 
                         .requestMatchers(HttpMethod.POST, "/api/v1/payments/stripe-webhook").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/api/v1/reviews/product-id=**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/reviews").authenticated()
 
                         .anyRequest().hasAnyAuthority(Role.ROLE_ADMINISTRATOR.name())
                 )

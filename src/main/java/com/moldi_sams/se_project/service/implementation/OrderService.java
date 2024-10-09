@@ -8,6 +8,7 @@ import com.moldi_sams.se_project.mapper.OrderMapper;
 import com.moldi_sams.se_project.repository.OrderRepository;
 import com.moldi_sams.se_project.repository.ProductRepository;
 import com.moldi_sams.se_project.repository.ProductSizeRepository;
+import com.moldi_sams.se_project.request.admin.OrderUpdateRequest;
 import com.moldi_sams.se_project.request.user.OrderLineProductRequest;
 import com.moldi_sams.se_project.request.user.OrderRequest;
 import com.moldi_sams.se_project.response.OrderResponse;
@@ -156,5 +157,16 @@ public class OrderService implements IOrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("The order by the provided id couldn't be found"));
 
         orderRepository.delete(searchedOrderById);
+    }
+
+    @Override
+    public OrderResponse updateById(Long orderId, OrderUpdateRequest request) {
+        Order searchedOrderById = orderRepository
+                .findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("The order by the provided id couldn't be found"));
+
+        searchedOrderById.setOrderStatus(OrderStatus.valueOf(request.orderStatus()));
+
+        return orderMapper.toOrderResponse(orderRepository.save(searchedOrderById));
     }
 }

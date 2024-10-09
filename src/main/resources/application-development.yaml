@@ -1,12 +1,11 @@
 server:
   port: 8080
 
-#logging:
-#  level:
-#    org:
-#      springframework: DEBUG
-
 spring:
+  data:
+    web:
+      pageable:
+        default-page-size: 10
   servlet:
     multipart:
       max-file-size: 5MB

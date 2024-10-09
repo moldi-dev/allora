@@ -34,6 +34,7 @@ public class ProductService implements IProductService {
     private final ProductCategoryRepository productCategoryRepository;
     private final ProductGenderRepository productGenderRepository;
     private final OrderRepository orderRepository;
+    private final ReviewRepository reviewRepository;
 
     @Override
     public Page<ProductResponse> findAll(Pageable pageable) {
@@ -213,6 +214,10 @@ public class ProductService implements IProductService {
         List<Order> orders = orderRepository.findAllContainingProductId(productId);
 
         orderRepository.deleteAll(orders);
+
+        Page<Review> reviews = reviewRepository.findAllByProductProductId(productId, null);
+
+        reviewRepository.deleteAll(reviews);
 
         searchedProductById.get().getImages().forEach(imageService::delete);
 
