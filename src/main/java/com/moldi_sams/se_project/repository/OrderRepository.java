@@ -13,7 +13,8 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    Page<Order> findByUserPersonalInformationUserPersonalInformationId(Long userPersonalInformationId, Pageable pageable);
+    Page<Order> findAllByUserPersonalInformationUserPersonalInformationId(Long userPersonalInformationId, Pageable pageable);
+    Page<Order> findAllByOrderStatus(OrderStatus orderStatus, Pageable pageable);
 
     @Query("SELECT o FROM Order o JOIN o.orderLineProducts olp WHERE olp.product.productId = :productId")
     List<Order> findAllContainingProductId(@Param("productId") Long productId);

@@ -57,7 +57,6 @@ public class AuthenticationService implements IAuthenticationService {
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .role(Role.ROLE_CUSTOMER)
-                .isLocked(false)
                 .personalInformation(UserPersonalInformation
                         .builder()
                         .firstName(request.firstName())

@@ -101,6 +101,19 @@ public class UserController {
         );
     }
 
+    @GetMapping("/authenticated/is-admin")
+    public ResponseEntity<HttpResponse> checkIfAuthenticatedUserIsAdmin() {
+        return ResponseEntity.ok(
+                HttpResponse
+                        .builder()
+                        .timestamp(LocalDateTime.now().toString())
+                        .responseMessage("The user is an administrator")
+                        .responseStatus(HttpStatus.OK)
+                        .responseStatusCode(HttpStatus.OK.value())
+                        .build()
+        );
+    }
+
     @PatchMapping("/request-password-reset-code")
     public ResponseEntity<HttpResponse> requestPasswordResetCode(@RequestBody @Valid PasswordResetTokenRequest request) {
         userService.requestPasswordResetToken(request);
@@ -140,6 +153,21 @@ public class UserController {
                         .builder()
                         .timestamp(LocalDateTime.now().toString())
                         .responseMessage("The password has been changed successfully")
+                        .responseStatus(HttpStatus.OK)
+                        .responseStatusCode(HttpStatus.OK.value())
+                        .build()
+        );
+    }
+
+    @DeleteMapping("/id={userId}")
+    public ResponseEntity<HttpResponse> deleteById(@PathVariable("userId") Long userId) {
+        userService.deleteById(userId);
+
+        return ResponseEntity.ok(
+                HttpResponse
+                        .builder()
+                        .timestamp(LocalDateTime.now().toString())
+                        .responseMessage("The user has been deleted successfully")
                         .responseStatus(HttpStatus.OK)
                         .responseStatusCode(HttpStatus.OK.value())
                         .build()

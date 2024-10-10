@@ -19,6 +19,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -64,7 +65,7 @@ public class OrderService implements IOrderService {
 
         personalInformation = entityManager.merge(personalInformation);
 
-        Page<Order> orders = orderRepository.findByUserPersonalInformationUserPersonalInformationId(personalInformation.getUserPersonalInformationId(), pageable);
+        Page<Order> orders = orderRepository.findAllByUserPersonalInformationUserPersonalInformationId(personalInformation.getUserPersonalInformationId(), pageable);
 
         if (orders.isEmpty()) {
             throw new ResourceNotFoundException("No orders could be found");
@@ -135,7 +136,7 @@ public class OrderService implements IOrderService {
                 .findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("The order by the provided id could not be found"));
 
-        Page<Order> userOrders = orderRepository.findByUserPersonalInformationUserPersonalInformationId(personalInformation.getUserPersonalInformationId(), null);
+        Page<Order> userOrders = orderRepository.findAllByUserPersonalInformationUserPersonalInformationId(personalInformation.getUserPersonalInformationId(), null);
 
         if (userOrders.isEmpty()) {
             throw new ResourceNotFoundException("The order by the provided id couldn't be found");
@@ -177,5 +178,11 @@ public class OrderService implements IOrderService {
         searchedOrderById.setOrderStatus(OrderStatus.valueOf(request.orderStatus()));
 
         return orderMapper.toOrderResponse(orderRepository.save(searchedOrderById));
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void deleteAllPendingOrdersDailyAtMidnight() {
+        Page<Order> pendingOrders = orderRepository.findAllByOrderStatus(OrderStatus.PENDING, null);
+        orderRepository.deleteAll(pendingOrders);
     }
 }

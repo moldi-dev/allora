@@ -19,4 +19,5 @@ public interface IUserService {
     void requestPasswordResetToken(PasswordResetTokenRequest request);
     void resetPassword(PasswordResetRequest request);
     void changePassword(Authentication authentication, PasswordChangeRequest request);
+    void deleteById(Long userId);
 }

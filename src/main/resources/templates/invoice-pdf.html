@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            color: #333;
+        }
+        .container {
+            width: 100%;
+            max-width: 680px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #333;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+        .order-details {
+            padding: 30px 20px;
+            background-color: #f9fafb;
+        }
+        .order-details h2, .order-details h3 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 5px;
+        }
+        .order-details p {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+        .order-item {
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+        }
+        .order-item p {
+            margin: 6px 0;
+        }
+        .order-item strong {
+            color: #333;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 20px;
+            font-size: 12px;
+        }
+        .footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Invoice for your order, [[${firstName}]] [[${lastName}]]</h1>
+    </div>
+
+    <div class="order-details">
+        <h2>Order Summary</h2>
+        <p><strong>Order Date:</strong> [[${orderDate}]]</p>
+        <p><strong>Total Price:</strong> <span>$[[${totalPrice}]]</span></p>
+
+        <h3>Products:</h3>
+        <div th:each="product : ${orderLineProducts}" class="order-item">
+            <p><strong>Product Name:</strong> [[${product.product.name}]]</p>
+            <p><strong>Description:</strong> [[${product.product.description}]]</p>
+            <p><strong>Category:</strong> [[${product.product.category.name}]]</p>
+            <p><strong>Brand:</strong> [[${product.product.brand.name}]]</p>
+            <p><strong>Gender:</strong> [[${product.product.gender.name}]]</p>
+            <p><strong>Selected Size:</strong> [[${product.productSize.name}]]</p>
+            <p><strong>Quantity:</strong> [[${product.quantity}]]</p>
+            <p><strong>Price per item:</strong> <span>$[[${product.product.price}]]</span></p>
+            <p><strong>Total for this product:</strong> <span>$[[${product.product.price} * ${product.quantity}]]</span></p>
+        </div>
+
+        <h3>Billing Address:</h3>
+        <p><strong>Name:</strong> [[${userPersonalInformation.firstName}]] [[${userPersonalInformation.lastName}]]</p>
+        <p><strong>Address:</strong> [[${userPersonalInformation.address}]]</p>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 Allora. All rights reserved.</p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,14 +1,21 @@
 package com.moldi_sams.se_project.service.implementation;
 
+import com.moldi_sams.se_project.entity.Order;
+import com.moldi_sams.se_project.entity.Review;
 import com.moldi_sams.se_project.entity.User;
+import com.moldi_sams.se_project.entity.UserPersonalInformation;
+import com.moldi_sams.se_project.enumeration.Role;
 import com.moldi_sams.se_project.exception.ResourceNotFoundException;
 import com.moldi_sams.se_project.mapper.UserMapper;
+import com.moldi_sams.se_project.repository.OrderRepository;
+import com.moldi_sams.se_project.repository.ReviewRepository;
 import com.moldi_sams.se_project.repository.UserRepository;
 import com.moldi_sams.se_project.request.user.PasswordChangeRequest;
 import com.moldi_sams.se_project.request.user.PasswordResetRequest;
 import com.moldi_sams.se_project.request.user.PasswordResetTokenRequest;
 import com.moldi_sams.se_project.response.UserResponse;
 import com.moldi_sams.se_project.service.IUserService;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,6 +38,9 @@ public class UserService implements IUserService {
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final ReCaptchaService reCaptchaService;
+    private final OrderRepository orderRepository;
+    private final ReviewRepository reviewRepository;
+    private final EntityManager entityManager;
 
     @Override
     public Page<UserResponse> findAll(Pageable pageable) {
@@ -123,6 +133,24 @@ public class UserService implements IUserService {
         authenticatedUser.setPassword(passwordEncoder.encode(request.newPassword()));
 
         userRepository.save(authenticatedUser);
+    }
+
+    @Override
+    public void deleteById(Long userId) {
+        User searchedUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("The user by the provided id couldn't be found"));
+
+        UserPersonalInformation personalInformation = searchedUser.getPersonalInformation();
+
+        personalInformation = entityManager.merge(personalInformation);
+
+        Page<Order> userOrders = orderRepository.findAllByUserPersonalInformationUserPersonalInformationId(personalInformation.getUserPersonalInformationId(), null);
+        Page<Review> userReviews = reviewRepository.findAllByUserPersonalInformationUserPersonalInformationId(personalInformation.getUserPersonalInformationId(), null);
+
+        orderRepository.deleteAll(userOrders);
+        reviewRepository.deleteAll(userReviews);
+
+        userRepository.delete(searchedUser);
     }
 
     private String generateToken(User user, int length) {
