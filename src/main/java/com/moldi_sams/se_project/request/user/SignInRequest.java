@@ -10,6 +10,9 @@ public record SignInRequest(
 
         @NotEmpty(message = "The password is required")
         @Size(min = 8, max = 30, message = "The password must contain at least 8 and at most 30 characters")
-        String password
+        String password,
+
+        @NotEmpty(message = "The recaptcha is required")
+        String recaptchaToken
 ) {
 }

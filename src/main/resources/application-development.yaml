@@ -14,7 +14,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    #show-sql: true
     show-sql: false
     open-in-view: false
     properties:
@@ -64,3 +63,7 @@ stripe:
     secret: ${DEVELOPMENT_STRIPE_WEBHOOK_SECRET}
   api:
     key: ${DEVELOPMENT_STRIPE_API_KEY}
+
+recaptcha:
+  secret-key: ${DEVELOPMENT_RECAPTCHA_SECRET_KEY}
+  verify-url: https://www.google.com/recaptcha/api/siteverify

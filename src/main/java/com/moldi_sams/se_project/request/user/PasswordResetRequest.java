@@ -21,6 +21,9 @@ public record PasswordResetRequest(
 
         @NotEmpty(message = "The new password confirmation is required")
         @Size(min = 8, max = 30, message = "The new password confirmation must contain at least 8 and at most 30 characters")
-        String confirmNewPassword
+        String confirmNewPassword,
+
+        @NotEmpty(message = "The recaptcha is required")
+        String recaptchaToken
 ) {
 }

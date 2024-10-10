@@ -2,6 +2,7 @@ package com.moldi_sams.se_project.service.implementation;
 
 import com.moldi_sams.se_project.entity.*;
 import com.moldi_sams.se_project.enumeration.OrderStatus;
+import com.moldi_sams.se_project.exception.BadRequestException;
 import com.moldi_sams.se_project.exception.ResourceAlreadyExistsException;
 import com.moldi_sams.se_project.exception.ResourceNotFoundException;
 import com.moldi_sams.se_project.mapper.OrderMapper;
@@ -87,6 +88,12 @@ public class OrderService implements IOrderService {
             Product product = productRepository.findById(orderLineProductRequest.productId())
                     .orElseThrow(() -> new RuntimeException("The product by the provided id couldn't be found"));
 
+            if (product.getStock() - orderLineProductRequest.quantity() <= 0) {
+                throw new BadRequestException("The product by the provided id can't be bought as there isn't enough stock available");
+            }
+
+            product.setStock(product.getStock() - orderLineProductRequest.quantity());
+
             ProductSize productSize = productSizeRepository.findById(orderLineProductRequest.productSizeId())
                     .orElseThrow(() -> new RuntimeException("The product size by the provided id couldn't be found"));
 
@@ -100,6 +107,8 @@ public class OrderService implements IOrderService {
             totalPrice = totalPrice.add(linePrice);
 
             orderLineProducts.add(orderLineProduct);
+
+            productRepository.save(product);
         }
 
         Order newOrder = Order.builder()

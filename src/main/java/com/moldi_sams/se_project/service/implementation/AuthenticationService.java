@@ -32,12 +32,15 @@ public class AuthenticationService implements IAuthenticationService {
     private final CookieService cookieService;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final ReCaptchaService reCaptchaService;
 
     @Value("${jwt.duration}")
     private String jwtDuration;
 
     @Override
     public UserResponse signUp(SignUpRequest request) {
+        reCaptchaService.validateTokenV2(request.recaptchaToken());
+
         userRepository.findByUsernameIgnoreCase(request.username())
                 .ifPresent(_ -> {
                     throw new ResourceAlreadyExistsException("This username is already taken");
@@ -70,6 +73,8 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public void signIn(SignInRequest request, HttpServletResponse response) {
+        reCaptchaService.validateTokenV2(request.recaptchaToken());
+
         User authenticatedUser = authenticate(request.username(), request.password());
 
         String jwt = jwtService.generateToken(authenticatedUser, Long.parseLong(jwtDuration));

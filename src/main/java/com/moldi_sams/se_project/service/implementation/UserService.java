@@ -30,6 +30,7 @@ public class UserService implements IUserService {
     private final UserMapper userMapper;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
+    private final ReCaptchaService reCaptchaService;
 
     @Override
     public Page<UserResponse> findAll(Pageable pageable) {
@@ -80,6 +81,8 @@ public class UserService implements IUserService {
 
     @Override
     public void requestPasswordResetToken(PasswordResetTokenRequest request) {
+        reCaptchaService.validateTokenV2(request.recaptchaToken());
+
         User searchedUserByEmail = userRepository
                 .findByEmailIgnoreCase(request.email())
                 .orElseThrow(() -> new ResourceNotFoundException("Invalid email provided"));
@@ -95,6 +98,8 @@ public class UserService implements IUserService {
 
     @Override
     public void resetPassword(PasswordResetRequest request) {
+        reCaptchaService.validateTokenV2(request.recaptchaToken());
+
         User searchedUser = userRepository.findByEmailIgnoreCase(request.email())
                 .orElseThrow(() -> new ResourceNotFoundException("Invalid provided email"));
 

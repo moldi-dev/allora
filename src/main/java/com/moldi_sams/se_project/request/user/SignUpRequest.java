@@ -34,6 +34,9 @@ public record SignUpRequest(
 
         @NotEmpty(message = "The password confirmation is required")
         @Size(min = 8, max = 30, message = "The password confirmation must contain at least 8 and at most 30 characters")
-        String confirmPassword
+        String confirmPassword,
+
+        @NotEmpty(message = "The recaptcha is required")
+        String recaptchaToken
 ) {
 }
