@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class EmailService {
+public class MailService {
     private final JavaMailSender javaMailSender;
     private final TemplateEngine templateEngine;
     private final PDFGeneratorService pdfGeneratorService;

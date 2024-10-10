@@ -34,7 +34,7 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class PaymentService {
-    private final EmailService emailService;
+    private final MailService mailService;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final OrderMapper orderMapper;
@@ -143,6 +143,6 @@ public class PaymentService {
         searchedOrder.setOrderStatus(OrderStatus.PAID);
         orderRepository.save(searchedOrder);
 
-        emailService.sendInvoiceEmail(searchedUser.getEmail(), orderMapper.toOrderResponse(searchedOrder));
+        mailService.sendInvoiceEmail(searchedUser.getEmail(), orderMapper.toOrderResponse(searchedOrder));
     }
 }

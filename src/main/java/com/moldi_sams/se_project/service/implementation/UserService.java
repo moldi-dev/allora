@@ -4,7 +4,6 @@ import com.moldi_sams.se_project.entity.Order;
 import com.moldi_sams.se_project.entity.Review;
 import com.moldi_sams.se_project.entity.User;
 import com.moldi_sams.se_project.entity.UserPersonalInformation;
-import com.moldi_sams.se_project.enumeration.Role;
 import com.moldi_sams.se_project.exception.ResourceNotFoundException;
 import com.moldi_sams.se_project.mapper.UserMapper;
 import com.moldi_sams.se_project.repository.OrderRepository;
@@ -35,7 +34,7 @@ import java.util.UUID;
 public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final EmailService emailService;
+    private final MailService mailService;
     private final PasswordEncoder passwordEncoder;
     private final ReCaptchaService reCaptchaService;
     private final OrderRepository orderRepository;
@@ -103,7 +102,7 @@ public class UserService implements IUserService {
 
         userRepository.save(searchedUserByEmail);
 
-        emailService.sendResetPasswordTokenEmail(searchedUserByEmail.getEmail(), token);
+        mailService.sendResetPasswordTokenEmail(searchedUserByEmail.getEmail(), token);
     }
 
     @Override

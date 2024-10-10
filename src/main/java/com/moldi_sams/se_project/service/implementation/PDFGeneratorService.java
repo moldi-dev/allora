@@ -3,9 +3,7 @@ package com.moldi_sams.se_project.service.implementation;
 import com.lowagie.text.DocumentException;
 import org.springframework.stereotype.Service;
 import org.xhtmlrenderer.pdf.ITextRenderer;
-import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
