@@ -78,7 +78,6 @@
             color: white;
             text-align: center;
             padding: 15px 20px;
-            font-size: 12px;
         }
         .footer p {
             margin: 0;
@@ -86,41 +85,39 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <h1>Invoice for your order, [[${firstName}]] [[${lastName}]]</h1>
-    </div>
-
-    <div class="order-details">
-        <h2>Order Summary</h2>
-        <p><strong>Order Date:</strong> [[${orderDate}]]</p>
-        <p><strong>Total Price:</strong> <span>$[[${totalPrice}]]</span></p>
-
-        <h3>Products:</h3>
-        <div th:each="product : ${orderLineProducts}" class="order-item">
-            <img th:src="${product.product.images[0].url}" th:alt="${product.product.images[0].name}"/>
-
-            <div>
-                <p><strong>Product Name:</strong> [[${product.product.name}]]</p>
-                <p><strong>Description:</strong> [[${product.product.description}]]</p>
-                <p><strong>Category:</strong> [[${product.product.category.name}]]</p>
-                <p><strong>Brand:</strong> [[${product.product.brand.name}]]</p>
-                <p><strong>Gender:</strong> [[${product.product.gender.name}]]</p>
-                <p><strong>Selected Size:</strong> [[${product.productSize.name}]]</p>
-                <p><strong>Quantity:</strong> [[${product.quantity}]]</p>
-                <p><strong>Price per item:</strong> <span>$[[${product.product.price}]]</span></p>
-                <p><strong>Total for this product:</strong> <span>$[[${product.product.price} * ${product.quantity}]]</span></p>
-            </div>
+    <div class="container">
+        <div class="header">
+            <h1>Invoice for your order, [[${firstName}]] [[${lastName}]]</h1>
         </div>
 
-        <h3>Billing Address:</h3>
-        <p><strong>Name:</strong> [[${userPersonalInformation.firstName}]] [[${userPersonalInformation.lastName}]]</p>
-        <p><strong>Address:</strong> [[${userPersonalInformation.address}]]</p>
-    </div>
+        <div class="order-details">
+            <h2>Order summary</h2>
+            <p><strong>Order date:</strong> [[${orderDate}]]</p>
+            <p><strong>Total price:</strong> <span>$[[${totalPrice}]]</span></p>
 
-    <div class="footer">
-        <p>&copy; 2024 Allora. All rights reserved.</p>
+            <h3>Products:</h3>
+            <div th:each="product : ${orderLineProducts}" class="order-item">
+                <img th:src="${product.product.images[0].url}" th:alt="${product.product.images[0].name}"/>
+
+                <div>
+                    <p><strong>Name:</strong> [[${product.product.name}]]</p>
+                    <p><strong>Description:</strong> [[${product.product.description}]]</p>
+                    <p><strong>Brand:</strong> [[${product.product.brand.name}]]</p>
+                    <p><strong>Size:</strong> [[${product.productSize.name}]]</p>
+                    <p><strong>Quantity:</strong> [[${product.quantity}]]</p>
+                    <p><strong>Price per item:</strong> <span>$[[${product.product.price}]]</span></p>
+                    <p><strong>Total for this product:</strong> <span>$[[${product.product.price} * ${product.quantity}]]</span></p>
+                </div>
+            </div>
+
+            <h3>Billing address:</h3>
+            <p><strong>Name:</strong> [[${userPersonalInformation.firstName}]] [[${userPersonalInformation.lastName}]]</p>
+            <p><strong>Address:</strong> [[${userPersonalInformation.address}]]</p>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2024 Allora. All rights reserved.</p>
+        </div>
     </div>
-</div>
 </body>
 </html>
