@@ -1,14 +1,14 @@
 package com.moldi_sams.se_project.request.user;
 
-import com.moldi_sams.se_project.validation.FieldMatch;
+import com.moldi_sams.se_project.validation.StringMatch;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
-@FieldMatch(first = "password", second = "confirmPassword", message = "The passwords do not match")
+@StringMatch(firstFieldName = "password", secondFieldName = "confirmPassword", errorFieldName = "confirmPassword", message = "The passwords do not match")
 public record SignUpRequest(
         @NotEmpty(message = "The username is required")
-        @Size(min = 8, max = 100, message = "The username must contain at least 8 and at most 100 characters")
+        @Size(min = 8, max = 20, message = "The username must contain at least 8 and at most 20 characters")
         String username,
 
         @NotEmpty(message = "The email is required")
@@ -16,8 +16,8 @@ public record SignUpRequest(
         @Size(max = 50, message = "The email must contain at most 50 characters")
         String email,
 
-        @NotEmpty(message = "The first name is required")
-        @Size(max = 30, message = "The first name must contain at most 30 characters")
+        @NotEmpty(message = "The firstFieldName name is required")
+        @Size(max = 30, message = "The firstFieldName name must contain at most 30 characters")
         String firstName,
 
         @NotEmpty(message = "The last name is required")

@@ -101,19 +101,6 @@ public class UserController {
         );
     }
 
-    @GetMapping("/authenticated/is-admin")
-    public ResponseEntity<HttpResponse> checkIfAuthenticatedUserIsAdmin() {
-        return ResponseEntity.ok(
-                HttpResponse
-                        .builder()
-                        .timestamp(LocalDateTime.now().toString())
-                        .responseMessage("The user is an administrator")
-                        .responseStatus(HttpStatus.OK)
-                        .responseStatusCode(HttpStatus.OK.value())
-                        .build()
-        );
-    }
-
     @PatchMapping("/request-password-reset-code")
     public ResponseEntity<HttpResponse> requestPasswordResetCode(@RequestBody @Valid PasswordResetTokenRequest request) {
         userService.requestPasswordResetToken(request);

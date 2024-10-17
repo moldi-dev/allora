@@ -1,10 +1,10 @@
 package com.moldi_sams.se_project.request.user;
 
-import com.moldi_sams.se_project.validation.FieldMatch;
+import com.moldi_sams.se_project.validation.StringMatch;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
-@FieldMatch(first = "newPassword", second = "confirmNewPassword", message = "The new passwords do not match")
+@StringMatch(firstFieldName = "newPassword", secondFieldName = "confirmNewPassword", errorFieldName = "confirmNewPassword", message = "The new passwords do not match")
 public record PasswordChangeRequest(
         @NotEmpty(message = "The new password is required")
         @Size(min = 8, max = 30, message = "The current password must contain at least 8 and at most 30 characters")

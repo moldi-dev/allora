@@ -1,11 +1,11 @@
 package com.moldi_sams.se_project.request.user;
 
-import com.moldi_sams.se_project.validation.FieldMatch;
+import com.moldi_sams.se_project.validation.StringMatch;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
-@FieldMatch(first = "newPassword", second = "confirmNewPassword", message = "The passwords do not match")
+@StringMatch(firstFieldName = "newPassword", secondFieldName = "confirmNewPassword", errorFieldName = "confirmNewPassword", message = "The new passwords do not match")
 public record PasswordResetRequest(
         @NotEmpty(message = "The email is required")
         @Email(message = "The email must follow the 'email@domain.com' pattern")

@@ -36,6 +36,22 @@ public class ProductController {
         );
     }
 
+    @GetMapping("/in-stock")
+    public ResponseEntity<HttpResponse> findAllInStock(Pageable pageable) {
+        var result = productService.findAllInStock(pageable);
+
+        return ResponseEntity.ok(
+                HttpResponse
+                        .builder()
+                        .timestamp(LocalDateTime.now().toString())
+                        .responseMessage("The products have been found successfully")
+                        .responseStatus(HttpStatus.OK)
+                        .responseStatusCode(HttpStatus.OK.value())
+                        .body(result)
+                        .build()
+        );
+    }
+
     @GetMapping("/id={productId}")
     public ResponseEntity<HttpResponse> findById(@PathVariable("productId") Long productId) {
         var result = productService.findById(productId);

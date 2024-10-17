@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 
 public record SignInRequest(
         @NotEmpty(message = "The username is required")
-        @Size(max = 50, message = "The username must contain at most 50 characters")
+        @Size(min = 8, max = 20, message = "The username must contain at least 8 and at most 20 characters")
         String username,
 
         @NotEmpty(message = "The password is required")

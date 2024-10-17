@@ -48,6 +48,17 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public Page<ProductResponse> findAllInStock(Pageable pageable) {
+        Page<Product> products = productRepository.findAllByStockGreaterThan(0L, pageable);
+
+        if (products.isEmpty()) {
+            throw new ResourceNotFoundException("No products could be found");
+        }
+
+        return products.map(productMapper::toProductResponse);
+    }
+
+    @Override
     public ProductResponse findById(Long productId) {
         return productRepository
                 .findById(productId)

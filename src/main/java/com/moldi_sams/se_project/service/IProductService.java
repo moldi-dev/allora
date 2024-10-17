@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface IProductService {
     Page<ProductResponse> findAll(Pageable pageable);
+    Page<ProductResponse> findAllInStock(Pageable pageable);
     ProductResponse findById(Long productId);
     ProductResponse save(ProductRequest productRequest);
     ProductResponse updateById(Long productId, ProductRequest productRequest);

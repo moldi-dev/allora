@@ -25,15 +25,18 @@ public record ProductRequest(
         Long stock,
 
         @NotNull(message = "The product's available size(s) is/are required")
-        List<String> sizesNames,
+        List<@NotEmpty @Size(max = 10, message = "The product's size can contain at most 10 characters") String> sizesNames,
 
-        @NotNull(message = "The product's brand is required")
+        @NotEmpty(message = "The product's brand is required")
+        @Size(max = 100, message = "The product's brand can contain at most 100 characters")
         String brandName,
 
-        @NotNull(message = "The product's gender is required")
+        @NotEmpty(message = "The product's gender is required")
+        @Size(max = 100, message = "The product's gender can contain at most 100 characters")
         String genderName,
 
-        @NotNull(message = "The product's category is required")
+        @NotEmpty(message = "The product's category is required")
+        @Size(max = 100, message = "The product's category can contain at most 100 characters")
         String categoryName,
 
         @ImageList

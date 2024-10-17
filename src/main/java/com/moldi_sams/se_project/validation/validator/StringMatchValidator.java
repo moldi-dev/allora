@@ -1,19 +1,22 @@
 package com.moldi_sams.se_project.validation.validator;
 
-import com.moldi_sams.se_project.validation.FieldMatch;
+import com.moldi_sams.se_project.validation.StringMatch;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 import java.lang.reflect.Field;
 
-public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
+public class StringMatchValidator implements ConstraintValidator<StringMatch, Object> {
+
     private String firstFieldName;
     private String secondFieldName;
+    private String errorFieldName;
 
     @Override
-    public void initialize(FieldMatch constraintAnnotation) {
-        this.firstFieldName = constraintAnnotation.first();
-        this.secondFieldName = constraintAnnotation.second();
+    public void initialize(StringMatch constraintAnnotation) {
+        this.firstFieldName = constraintAnnotation.firstFieldName();
+        this.secondFieldName = constraintAnnotation.secondFieldName();
+        this.errorFieldName = constraintAnnotation.errorFieldName();
     }
 
     @Override
@@ -22,7 +25,15 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
             Object firstValue = getFieldValue(value, firstFieldName);
             Object secondValue = getFieldValue(value, secondFieldName);
 
-            return firstValue != null && firstValue.equals(secondValue);
+            boolean isValid = firstValue != null && firstValue.equals(secondValue);
+
+            if (!isValid) {
+                context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
+                        .addPropertyNode(errorFieldName)
+                        .addConstraintViolation();
+            }
+
+            return isValid;
         }
 
         catch (Exception e) {
