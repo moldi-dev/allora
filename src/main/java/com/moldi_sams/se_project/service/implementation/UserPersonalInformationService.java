@@ -8,7 +8,6 @@ import com.moldi_sams.se_project.repository.UserPersonalInformationRepository;
 import com.moldi_sams.se_project.request.UserPersonalInformationRequest;
 import com.moldi_sams.se_project.response.UserPersonalInformationResponse;
 import com.moldi_sams.se_project.service.IUserPersonalInformationService;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 public class UserPersonalInformationService implements IUserPersonalInformationService {
     private final UserPersonalInformationRepository userPersonalInformationRepository;
     private final UserPersonalInformationMapper userPersonalInformationMapper;
-    private final EntityManager entityManager;
 
     @Override
     public UserPersonalInformationResponse findById(Long userPersonalInformationId) {
@@ -35,8 +33,6 @@ public class UserPersonalInformationService implements IUserPersonalInformationS
         User authenticatedUser = ((User) authentication.getPrincipal());
         UserPersonalInformation personalInformation = authenticatedUser.getPersonalInformation();
 
-        personalInformation = entityManager.merge(personalInformation);
-
         return userPersonalInformationMapper.toUserPersonalInformationResponse(personalInformation);
     }
 
@@ -44,8 +40,6 @@ public class UserPersonalInformationService implements IUserPersonalInformationS
     public UserPersonalInformationResponse updateAuthenticatedUserData(Authentication authentication, UserPersonalInformationRequest request) {
         User authenticatedUser = ((User) authentication.getPrincipal());
         UserPersonalInformation personalInformation = authenticatedUser.getPersonalInformation();
-
-        personalInformation = entityManager.merge(personalInformation);
 
         personalInformation.setAddress(request.address());
 

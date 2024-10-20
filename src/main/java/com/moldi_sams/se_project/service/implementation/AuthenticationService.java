@@ -42,12 +42,12 @@ public class AuthenticationService implements IAuthenticationService {
         reCaptchaService.validateTokenV2(request.recaptchaToken());
 
         userRepository.findByUsernameIgnoreCase(request.username())
-                .ifPresent(_ -> {
+                .ifPresent(user -> {
                     throw new ResourceAlreadyExistsException("This username is already taken");
                 });
 
         userRepository.findByEmailIgnoreCase(request.email())
-                .ifPresent(_ -> {
+                .ifPresent(user -> {
                     throw new ResourceAlreadyExistsException("This email is already taken");
                 });
 

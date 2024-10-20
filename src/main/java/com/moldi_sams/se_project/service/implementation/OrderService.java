@@ -14,7 +14,6 @@ import com.moldi_sams.se_project.request.user.OrderLineProductRequest;
 import com.moldi_sams.se_project.request.user.OrderRequest;
 import com.moldi_sams.se_project.response.OrderResponse;
 import com.moldi_sams.se_project.service.IOrderService;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,7 +33,6 @@ import java.util.List;
 public class OrderService implements IOrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
-    private final EntityManager entityManager;
     private final PaymentService paymentService;
     private final ProductRepository productRepository;
     private final ProductSizeRepository productSizeRepository;
@@ -63,8 +61,6 @@ public class OrderService implements IOrderService {
         User authenticatedUser = ((User) authentication.getPrincipal());
         UserPersonalInformation personalInformation = authenticatedUser.getPersonalInformation();
 
-        personalInformation = entityManager.merge(personalInformation);
-
         Page<Order> orders = orderRepository.findAllByUserPersonalInformationUserPersonalInformationId(personalInformation.getUserPersonalInformationId(), pageable);
 
         if (orders.isEmpty()) {
@@ -78,8 +74,6 @@ public class OrderService implements IOrderService {
     public String placeOrder(Authentication authentication, OrderRequest orderRequest) {
         User authenticatedUser = ((User) authentication.getPrincipal());
         UserPersonalInformation personalInformation = authenticatedUser.getPersonalInformation();
-
-        personalInformation = entityManager.merge(personalInformation);
 
         List<OrderLineProduct> orderLineProducts = new ArrayList<>();
 
@@ -129,8 +123,6 @@ public class OrderService implements IOrderService {
     public String payPendingOrder(Authentication authentication, Long orderId) {
         User authenticatedUser = ((User) authentication.getPrincipal());
         UserPersonalInformation personalInformation = authenticatedUser.getPersonalInformation();
-
-        personalInformation = entityManager.merge(personalInformation);
 
         Order searchedOrder = orderRepository
                 .findById(orderId)

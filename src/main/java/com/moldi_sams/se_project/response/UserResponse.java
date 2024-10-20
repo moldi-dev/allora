@@ -4,6 +4,7 @@ public record UserResponse(
         Long userId,
         String username,
         String email,
-        Boolean isAdministrator
+        Boolean isAdministrator,
+        UserPersonalInformationResponse userPersonalInformation
 ) {
 }

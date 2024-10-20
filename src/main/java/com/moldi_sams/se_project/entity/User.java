@@ -32,7 +32,7 @@ public class User implements UserDetails {
 
     private String resetPasswordToken;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private UserPersonalInformation personalInformation;
 
     @Enumerated(EnumType.STRING)

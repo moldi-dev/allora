@@ -131,7 +131,7 @@ public class UserController {
         );
     }
 
-    @PatchMapping("/change-password")
+    @PatchMapping("/authenticated/change-password")
     public ResponseEntity<HttpResponse> changePassword(Authentication authentication, @RequestBody @Valid PasswordChangeRequest request) {
         userService.changePassword(authentication, request);
 

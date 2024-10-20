@@ -51,7 +51,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/authenticated").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/users/request-password-reset-code").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/users/reset-password").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/api/v1/users/change-password").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/users/authenticated/change-password").authenticated()
 
                         .requestMatchers(HttpMethod.GET, "/api/v1/users-personal-informations/authenticated").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/users-personal-informations/authenticated").authenticated()

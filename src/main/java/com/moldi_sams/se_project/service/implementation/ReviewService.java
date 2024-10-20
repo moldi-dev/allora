@@ -15,7 +15,6 @@ import com.moldi_sams.se_project.repository.ReviewRepository;
 import com.moldi_sams.se_project.request.user.ReviewRequest;
 import com.moldi_sams.se_project.response.ReviewResponse;
 import com.moldi_sams.se_project.service.IReviewService;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,7 +31,6 @@ public class ReviewService implements IReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewMapper reviewMapper;
     private final OrderRepository orderRepository;
-    private final EntityManager entityManager;
     private final ProductRepository productRepository;
 
     @Override
@@ -73,8 +71,6 @@ public class ReviewService implements IReviewService {
         Product searchedProduct = productRepository
                 .findById(request.productId())
                 .orElseThrow(() -> new ResourceNotFoundException("The product by the provided id couldn't be found"));
-
-        personalInformation = entityManager.merge(personalInformation);
 
         Boolean isAlreadyReviewed = reviewRepository
                 .existsByUserPersonalInformationUserPersonalInformationIdAndProductProductId(personalInformation.getUserPersonalInformationId(), request.productId());

@@ -4,6 +4,8 @@ import com.moldi_sams.se_project.entity.Order;
 import com.moldi_sams.se_project.entity.Review;
 import com.moldi_sams.se_project.entity.User;
 import com.moldi_sams.se_project.entity.UserPersonalInformation;
+import com.moldi_sams.se_project.exception.BadRequestException;
+import com.moldi_sams.se_project.exception.ResourceAlreadyExistsException;
 import com.moldi_sams.se_project.exception.ResourceNotFoundException;
 import com.moldi_sams.se_project.mapper.UserMapper;
 import com.moldi_sams.se_project.repository.OrderRepository;
@@ -14,7 +16,6 @@ import com.moldi_sams.se_project.request.user.PasswordResetRequest;
 import com.moldi_sams.se_project.request.user.PasswordResetTokenRequest;
 import com.moldi_sams.se_project.response.UserResponse;
 import com.moldi_sams.se_project.service.IUserService;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -39,7 +40,6 @@ public class UserService implements IUserService {
     private final ReCaptchaService reCaptchaService;
     private final OrderRepository orderRepository;
     private final ReviewRepository reviewRepository;
-    private final EntityManager entityManager;
 
     @Override
     public Page<UserResponse> findAll(Pageable pageable) {
@@ -129,6 +129,10 @@ public class UserService implements IUserService {
             throw new ResourceNotFoundException("The provided current password is invalid");
         }
 
+        if (request.currentPassword().equals(request.newPassword())) {
+            throw new ResourceAlreadyExistsException("The new password can't be the same as the current password");
+        }
+
         authenticatedUser.setPassword(passwordEncoder.encode(request.newPassword()));
 
         userRepository.save(authenticatedUser);
@@ -140,8 +144,6 @@ public class UserService implements IUserService {
                 .orElseThrow(() -> new ResourceNotFoundException("The user by the provided id couldn't be found"));
 
         UserPersonalInformation personalInformation = searchedUser.getPersonalInformation();
-
-        personalInformation = entityManager.merge(personalInformation);
 
         Page<Order> userOrders = orderRepository.findAllByUserPersonalInformationUserPersonalInformationId(personalInformation.getUserPersonalInformationId(), null);
         Page<Review> userReviews = reviewRepository.findAllByUserPersonalInformationUserPersonalInformationId(personalInformation.getUserPersonalInformationId(), null);

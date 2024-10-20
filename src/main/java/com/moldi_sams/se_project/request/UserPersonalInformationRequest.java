@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 public record UserPersonalInformationRequest(
-        @NotEmpty(message = "The firstFieldName name is required")
-        @Size(max = 30, message = "The firstFieldName name must contain at most 30 characters")
+        @NotEmpty(message = "The first name name is required")
+        @Size(max = 30, message = "The first name name must contain at most 30 characters")
         String firstName,
 
         @NotEmpty(message = "The last name is required")
