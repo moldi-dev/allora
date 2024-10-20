@@ -7,13 +7,17 @@ import com.moldi_sams.se_project.mapper.ImageMapper;
 import com.moldi_sams.se_project.mapper.ProductMapper;
 import com.moldi_sams.se_project.repository.*;
 import com.moldi_sams.se_project.request.admin.ProductRequest;
+import com.moldi_sams.se_project.request.user.ProductFilterRequest;
 import com.moldi_sams.se_project.response.ImageResponse;
 import com.moldi_sams.se_project.response.ProductResponse;
 import com.moldi_sams.se_project.service.IProductService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,6 +54,72 @@ public class ProductService implements IProductService {
     @Override
     public Page<ProductResponse> findAllInStock(Pageable pageable) {
         Page<Product> products = productRepository.findAllByStockGreaterThan(0L, pageable);
+
+        if (products.isEmpty()) {
+            throw new ResourceNotFoundException("No products could be found");
+        }
+
+        return products.map(productMapper::toProductResponse);
+    }
+
+    @Override
+    public Page<ProductResponse> findAllByFilters(ProductFilterRequest request, Pageable pageable) {
+        Specification<Product> specification = (root, query, criteriaBuilder) -> {
+            var predicates = criteriaBuilder.conjunction();
+
+            if (request.name() != null && !request.name().isEmpty()) {
+                predicates = criteriaBuilder.and(predicates, criteriaBuilder.like(root.get("name"), "%" + request.name() + "%"));
+            }
+
+            if (request.brandsIds() != null && !request.brandsIds().isEmpty()) {
+                predicates = criteriaBuilder.and(predicates, root.get("brand").get("productBrandId").in(request.brandsIds()));
+            }
+
+            if (request.categoriesIds() != null && !request.categoriesIds().isEmpty()) {
+                predicates = criteriaBuilder.and(predicates, root.get("category").get("productCategoryId").in(request.categoriesIds()));
+            }
+
+            if (request.sizesIds() != null && !request.sizesIds().isEmpty()) {
+                predicates = criteriaBuilder.and(predicates, root.join("sizes").get("sizeId").in(request.sizesIds()));
+            }
+
+            if (request.gendersIds() != null && !request.gendersIds().isEmpty()) {
+                predicates = criteriaBuilder.and(predicates, root.get("gender").get("productGenderId").in(request.gendersIds()));
+            }
+
+            if (request.maxPrice() != null) {
+                predicates = criteriaBuilder.and(predicates, criteriaBuilder.le(root.get("price"), request.maxPrice()));
+            }
+
+            if (request.minPrice() != null) {
+                predicates = criteriaBuilder.and(predicates, criteriaBuilder.ge(root.get("price"), request.minPrice()));
+            }
+
+            return predicates;
+        };
+
+        if (request.sort() != null) {
+            Sort sort = Sort.by(Sort.Direction.ASC, "name");
+
+            switch (request.sort()) {
+                case "name-ascending":
+                    sort = Sort.by(Sort.Direction.ASC, "name");
+                    break;
+                case "name-descending":
+                    sort = Sort.by(Sort.Direction.DESC, "name");
+                    break;
+                case "price-ascending":
+                    sort = Sort.by(Sort.Direction.ASC, "price");
+                    break;
+                case "price-descending":
+                    sort = Sort.by(Sort.Direction.DESC, "price");
+                    break;
+            }
+
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+        }
+
+        Page<Product> products = productRepository.findAll(specification, pageable);
 
         if (products.isEmpty()) {
             throw new ResourceNotFoundException("No products could be found");

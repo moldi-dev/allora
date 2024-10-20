@@ -1,6 +1,7 @@
 package com.moldi_sams.se_project.controller;
 
 import com.moldi_sams.se_project.request.admin.ProductRequest;
+import com.moldi_sams.se_project.request.user.ProductFilterRequest;
 import com.moldi_sams.se_project.response.HttpResponse;
 import com.moldi_sams.se_project.service.implementation.ProductService;
 import jakarta.validation.Valid;
@@ -61,6 +62,22 @@ public class ProductController {
                         .builder()
                         .timestamp(LocalDateTime.now().toString())
                         .responseMessage("The product has been found successfully")
+                        .responseStatus(HttpStatus.OK)
+                        .responseStatusCode(HttpStatus.OK.value())
+                        .body(result)
+                        .build()
+        );
+    }
+
+    @PostMapping("/all/filters")
+    public ResponseEntity<HttpResponse> findAllByFilters(@RequestBody @Valid ProductFilterRequest request, Pageable pageable) {
+        var result = productService.findAllByFilters(request, pageable);
+
+        return ResponseEntity.ok(
+                HttpResponse
+                        .builder()
+                        .timestamp(LocalDateTime.now().toString())
+                        .responseMessage("The products have been found successfully")
                         .responseStatus(HttpStatus.OK)
                         .responseStatusCode(HttpStatus.OK.value())
                         .body(result)
