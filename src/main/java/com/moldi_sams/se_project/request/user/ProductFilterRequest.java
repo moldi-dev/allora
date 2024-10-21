@@ -25,10 +25,6 @@ public record ProductFilterRequest(
         BigDecimal minPrice,
 
         @StringValues(allowedValues = {"name-ascending", "name-descending", "price-ascending", "price-descending"}, message = "The sorting can only contain the values 'name-ascending', 'name-descending', 'price-ascending', 'price-descending'")
-        String sort,
-
-        @NotNull(message = "The page is required")
-        @Min(value = 0, message = "The minimum page must be 0")
-        Integer page
+        String sort
 ) {
 }

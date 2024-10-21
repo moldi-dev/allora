@@ -68,7 +68,13 @@ public class ProductService implements IProductService {
             var predicates = criteriaBuilder.conjunction();
 
             if (request.name() != null && !request.name().isEmpty()) {
-                predicates = criteriaBuilder.and(predicates, criteriaBuilder.like(root.get("name"), "%" + request.name() + "%"));
+                predicates = criteriaBuilder.and(
+                        predicates,
+                        criteriaBuilder.like(
+                                criteriaBuilder.lower(root.get("name")),
+                                "%" + request.name().toLowerCase() + "%"
+                        )
+                );
             }
 
             if (request.brandsIds() != null && !request.brandsIds().isEmpty()) {
@@ -80,7 +86,7 @@ public class ProductService implements IProductService {
             }
 
             if (request.sizesIds() != null && !request.sizesIds().isEmpty()) {
-                predicates = criteriaBuilder.and(predicates, root.join("sizes").get("sizeId").in(request.sizesIds()));
+                predicates = criteriaBuilder.and(predicates, root.join("sizes").get("productSizeId").in(request.sizesIds()));
             }
 
             if (request.gendersIds() != null && !request.gendersIds().isEmpty()) {
@@ -101,20 +107,14 @@ public class ProductService implements IProductService {
         if (request.sort() != null) {
             Sort sort = Sort.by(Sort.Direction.ASC, "name");
 
-            switch (request.sort()) {
-                case "name-ascending":
-                    sort = Sort.by(Sort.Direction.ASC, "name");
-                    break;
-                case "name-descending":
-                    sort = Sort.by(Sort.Direction.DESC, "name");
-                    break;
-                case "price-ascending":
-                    sort = Sort.by(Sort.Direction.ASC, "price");
-                    break;
-                case "price-descending":
-                    sort = Sort.by(Sort.Direction.DESC, "price");
-                    break;
-            }
+            sort = switch (request.sort()) {
+                case "name-ascending" -> Sort.by(Sort.Direction.ASC, "name");
+                case "name-descending" -> Sort.by(Sort.Direction.DESC, "name");
+                case "price-ascending" -> Sort.by(Sort.Direction.ASC, "price");
+                case "price-descending" -> Sort.by(Sort.Direction.DESC, "price");
+
+                default -> sort;
+            };
 
             pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
         }
