@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
@@ -38,6 +39,7 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .ignoringRequestMatchers("/api/v1/payments/stripe-webhook")
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET, "/hello-world").permitAll()
@@ -84,6 +86,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/api/v1/payments/stripe-webhook").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/api/v1/reviews/product-id=**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/reviews/authenticated/can-review/product-id=**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/v1/reviews").authenticated()
 
                         .anyRequest().hasAnyAuthority(Role.ROLE_ADMINISTRATOR.name())

@@ -68,6 +68,22 @@ public class ReviewController {
         );
     }
 
+    @GetMapping("/authenticated/can-review/product-id={productId}")
+    public ResponseEntity<HttpResponse> canAuthenticatedUserPostReview(Authentication authentication, @PathVariable("productId") Long productId) {
+        var result = reviewService.canAuthenticatedUserPostReview(authentication, productId);
+
+        return ResponseEntity.ok(
+                HttpResponse
+                        .builder()
+                        .timestamp(LocalDateTime.now().toString())
+                        .responseMessage("The response has been found successfully")
+                        .responseStatus(HttpStatus.OK)
+                        .responseStatusCode(HttpStatus.OK.value())
+                        .body(result)
+                        .build()
+        );
+    }
+
     @PostMapping
     public ResponseEntity<HttpResponse> save(Authentication authentication, @RequestBody @Valid ReviewRequest request) {
         var result = reviewService.save(authentication, request);

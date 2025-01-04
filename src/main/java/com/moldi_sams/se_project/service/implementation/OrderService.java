@@ -83,7 +83,7 @@ public class OrderService implements IOrderService {
             Product product = productRepository.findById(orderLineProductRequest.productId())
                     .orElseThrow(() -> new RuntimeException("The product by the provided id couldn't be found"));
 
-            if (product.getStock() - orderLineProductRequest.quantity() <= 0) {
+            if (product.getStock() - orderLineProductRequest.quantity() < 0) {
                 throw new BadRequestException("The product by the provided id can't be bought as there isn't enough stock available");
             }
 

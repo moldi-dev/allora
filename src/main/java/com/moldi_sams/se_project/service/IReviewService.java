@@ -14,5 +14,6 @@ public interface IReviewService {
     ReviewResponse findById(Long reviewId);
     ReviewResponse save(Authentication authentication, ReviewRequest request);
     ReviewResponse updateById(Long reviewId, ReviewRequest request);
+    Boolean canAuthenticatedUserPostReview(Authentication authentication, Long productId);
     void deleteById(Long reviewId);
 }

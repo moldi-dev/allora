@@ -111,6 +111,17 @@ public class ReviewService implements IReviewService {
     }
 
     @Override
+    public Boolean canAuthenticatedUserPostReview(Authentication authentication, Long productId) {
+        User authenticatedUser = ((User) authentication.getPrincipal());
+        UserPersonalInformation personalInformation = authenticatedUser.getPersonalInformation();
+
+        Boolean reviewAlreadyExists = reviewRepository.existsByUserPersonalInformationUserPersonalInformationIdAndProductProductId(personalInformation.getUserPersonalInformationId(), productId);
+        Boolean deliveredOrderExists = orderRepository.existsByUserPersonalInformationUserPersonalInformationIdAndOrderStatusAndOrderLineProducts_Product_ProductId(personalInformation.getUserPersonalInformationId(), OrderStatus.DELIVERED, productId);
+
+        return !reviewAlreadyExists && deliveredOrderExists;
+    }
+
+    @Override
     public void deleteById(Long reviewId) {
         Review searchedById = reviewRepository
                 .findById(reviewId)
