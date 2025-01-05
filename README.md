@@ -10,6 +10,7 @@ college.
 - Password updating and resetting through a code sent on email
 - Payment integration using Stripe
 - Placing orders and reviews for orders which are marked as delivered
+- AI assistant
 
 ## Technologies used
 - Java

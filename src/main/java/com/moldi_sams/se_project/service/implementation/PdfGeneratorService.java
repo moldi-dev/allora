@@ -8,7 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @Service
-public class PDFGeneratorService {
+public class PdfGeneratorService {
     public byte[] generatePdfFromHtml(String htmlContent) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

@@ -67,3 +67,7 @@ stripe:
 recaptcha:
   secret-key: ${DEVELOPMENT_RECAPTCHA_SECRET_KEY}
   verify-url: https://www.google.com/recaptcha/api/siteverify
+
+ai:
+  secret-key: ${DEVELOPMENT_AI_SECRET_KEY}
+  api-url: https://api.openai.com/v1/chat/completions

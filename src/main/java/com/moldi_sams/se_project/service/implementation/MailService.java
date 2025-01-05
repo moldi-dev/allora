@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter;
 public class MailService {
     private final JavaMailSender javaMailSender;
     private final TemplateEngine templateEngine;
-    private final PDFGeneratorService pdfGeneratorService;
+    private final PdfGeneratorService pdfGeneratorService;
 
     @Value("${spring.mail.from}")
     private String from;
