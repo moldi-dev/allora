@@ -89,6 +89,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/api/v1/reviews/authenticated/can-review/product-id=**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/v1/reviews").authenticated()
 
+                        .requestMatchers(HttpMethod.GET, "/hello-world").permitAll()
+
                         .anyRequest().hasAnyAuthority(Role.ROLE_ADMINISTRATOR.name())
                 )
                 .sessionManagement(session -> session
