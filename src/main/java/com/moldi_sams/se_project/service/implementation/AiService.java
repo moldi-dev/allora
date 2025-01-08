@@ -1,5 +1,10 @@
 package com.moldi_sams.se_project.service.implementation;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import com.moldi_sams.se_project.request.admin.AiPromptRequest;
 import com.moldi_sams.se_project.response.AiPromptResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 @Service
 @RequiredArgsConstructor
@@ -315,7 +315,7 @@ public class AiService {
     private String getExplanationFromAI(String queryResult, AiPromptRequest request, String sqlQuery) {
         String prompt = "You are an assistant. Your task is to explain the following SQL query result in a clear and concise manner:\n" +
                 "Query Result: " + queryResult + "\n" + "Query prompt: " + request.prompt() + "\n" + "SQL query: " + sqlQuery + "\n" +
-                "Please provide a simple and understandable explanation of the result. Don't forget to include the generated SQL query!";
+                "Please provide a simple and understandable explanation of the result. Don't forget to include the generated SQL query and the result!";
 
         return callAiApi(prompt);
     }

@@ -2,8 +2,6 @@ package com.moldi_sams.se_project.request.user;
 
 import com.moldi_sams.se_project.validation.PriceRange;
 import com.moldi_sams.se_project.validation.StringValues;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.util.List;

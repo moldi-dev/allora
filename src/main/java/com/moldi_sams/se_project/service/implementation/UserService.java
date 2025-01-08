@@ -4,7 +4,6 @@ import com.moldi_sams.se_project.entity.Order;
 import com.moldi_sams.se_project.entity.Review;
 import com.moldi_sams.se_project.entity.User;
 import com.moldi_sams.se_project.entity.UserPersonalInformation;
-import com.moldi_sams.se_project.exception.BadRequestException;
 import com.moldi_sams.se_project.exception.ResourceAlreadyExistsException;
 import com.moldi_sams.se_project.exception.ResourceNotFoundException;
 import com.moldi_sams.se_project.mapper.UserMapper;
