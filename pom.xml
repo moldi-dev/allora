@@ -8,11 +8,11 @@
 		<version>3.3.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.moldi_sams</groupId>
-	<artifactId>se_project</artifactId>
+	<groupId>com.moldi</groupId>
+	<artifactId>allora</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>se_project</name>
-	<description>Software Engineering Final Project</description>
+	<name>allora</name>
+	<description>Allora Clothing Store Backend</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -116,6 +116,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 	</dependencies>
 

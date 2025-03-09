@@ -1,11 +1,11 @@
 services:
   postgresql:
-    container_name: postgres_server_se_project
+    container_name: postgres_server
     image: postgres
     environment:
       POSTGRES_USER: postgres_user
       POSTGRES_PASSWORD: postgres_password
-      POSTGRES_DB: postgres_db
+      POSTGRES_DB: allora_db
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
 
   minio:
-    container_name: minio_server_se_project
+    container_name: minio_server
     image: minio/minio
     environment:
       MINIO_ROOT_USER: minio_root_user
@@ -28,7 +28,7 @@ services:
     restart: unless-stopped
 
   maildev:
-    container_name: maildev_server_se_project
+    container_name: maildev_server
     image: maildev/maildev
     ports:
       - "1080:1080"

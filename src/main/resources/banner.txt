@@ -8,6 +8,6 @@
  /_/   \_\_|_|\___/|_|  \__,_|
 
 
-Developed by moldi-dev & sams
+Developed by moldi-dev
 
 

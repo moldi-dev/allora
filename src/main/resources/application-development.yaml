@@ -23,7 +23,7 @@ spring:
   datasource:
     username: postgres_user
     password: postgres_password
-    url: jdbc:postgresql://localhost:5432/postgres_db
+    url: jdbc:postgresql://localhost:5432/allora_db
   application:
     name: Allora
   mail:
