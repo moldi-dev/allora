@@ -3,8 +3,6 @@ package com.moldi.allora.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @Setter

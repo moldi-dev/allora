@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -49,7 +49,7 @@ public class ImageService implements IImageService {
     @Override
     public ImageResponse save(MultipartFile file) {
         String fileName = file.getOriginalFilename();
-        String objectFileName = file.getOriginalFilename() + "_" + LocalDateTime.now();
+        String objectFileName = Objects.requireNonNull(file.getOriginalFilename()).replace(" ", "");
 
         Image newImage = Image.builder()
                 .size(BigDecimal.valueOf(file.getSize()).divide(BigDecimal.valueOf(1024 * 1024), 2, RoundingMode.HALF_UP))

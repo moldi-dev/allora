@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -23,7 +22,7 @@ public class Order extends Auditable {
     @ManyToOne(fetch = FetchType.EAGER)
     private UserPersonalInformation userPersonalInformation;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<OrderLineProduct> orderLineProducts;
 
     private BigDecimal totalPrice;

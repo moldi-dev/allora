@@ -39,6 +39,6 @@ public class Product extends Auditable {
     @ManyToOne(fetch = FetchType.EAGER)
     private ProductCategory category;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Image> images;
 }

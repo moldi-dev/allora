@@ -17,7 +17,8 @@ public class UserMapper {
                 user.getUsername(),
                 user.getEmail(),
                 user.getRole().equals(Role.ROLE_ADMINISTRATOR),
-                userPersonalInformationMapper.toUserPersonalInformationResponse(user.getPersonalInformation())
+                userPersonalInformationMapper.toUserPersonalInformationResponse(user.getPersonalInformation()),
+                user.getLastLogin()
         );
     }
 }

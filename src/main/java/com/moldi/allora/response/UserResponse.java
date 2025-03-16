@@ -1,10 +1,13 @@
 package com.moldi.allora.response;
 
+import java.time.LocalDateTime;
+
 public record UserResponse(
         Long userId,
         String username,
         String email,
         Boolean isAdministrator,
-        UserPersonalInformationResponse userPersonalInformation
+        UserPersonalInformationResponse userPersonalInformation,
+        LocalDateTime lastLogin
 ) {
 }
